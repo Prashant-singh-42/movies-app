@@ -8,10 +8,6 @@ let searchQuery = document.querySelector("input");
 
 let seachContainer = document.querySelector(".container-search");
 
-// let moviesContainer = document.createElement("div");
-// moviesContainer.classList.add("movies-container");
-// moviesContainer.classList.add("active");
-
 // code to filter out the movies based the search text--------------------
 const filterMovies = (startLetters, data) => {
     let res = []
@@ -34,14 +30,13 @@ const filterMovies = (startLetters, data) => {
 }
 
 searchQuery.addEventListener('input', (e) => {
-    // seachContainer.childNodes = []
-    // let children = seachContainer.children;
 
-    let childern = seachContainer.childNodes
-
+    // console.log(e)
+    console.log(searchQuery)
     let startLetters = e.target.value;
     let filteredMovies = filterMovies(startLetters, data);
-    // console.log(filteredMovies);
+
+    //creating the element to be added after populating th equereyed movies
     let moviesContainer = document.createElement("div");
     moviesContainer.classList.add("movies-container");
     let itemContainer = document.createElement("ul");
@@ -54,10 +49,11 @@ searchQuery.addEventListener('input', (e) => {
     })
     moviesContainer.appendChild(itemContainer)
 
-    if (childern.length === 5){
+    if (seachContainer.childElementCount<=2){
         seachContainer.appendChild(moviesContainer)
     }else {
-        childern[5] = moviesContainer
+        seachContainer.lastElementChild.remove()
+        seachContainer.appendChild(moviesContainer)
     }
     // seachContainer.appendChild(moviesContainer)
 })
@@ -66,9 +62,20 @@ searchQuery.addEventListener('input', (e) => {
 // ------------------------------------------------------------------------
 
 // code for smoothing the search bar animation
+let moviesContainerVisible = true;
 search.onclick = () => {
     document.querySelector(".container-search").classList.toggle("active");
     document.querySelector(".icon").classList.toggle("active");
+
+    // code to remove the search movies container from the bottom
+    if (!moviesContainerVisible && seachContainer.childElementCount>2){
+        //reaseting the value of search last to black when it closes
+        searchQuery.value = ""
+        seachContainer.lastElementChild.remove()
+    }
+    moviesContainerVisible = !moviesContainerVisible
+    //-------------------------------------------------------------
+
 
     let m = document.querySelector(".input").classList;
     let flag = false;
@@ -87,11 +94,14 @@ search.onclick = () => {
 }
 
 //code to populate cards inside silder section on home page maximum 7 cards
+// count just to give correct id to image
 let count = 1
 let cardMaker = (data,trendSec) => {
     
     for (const element in data) {
         // console.log(data[element].vide0)
+
+        // creating the cards for the slider component
         let anchor = document.createElement("a")
         anchor.href = data[element].vide0
         let img = document.createElement("img")
@@ -102,7 +112,7 @@ let cardMaker = (data,trendSec) => {
         desc.classList.add("overlay")
         anchor.appendChild(img)
         anchor.appendChild(desc)
-        console.log(anchor)
+        // console.log(anchor)
 
         trendSec.appendChild(anchor)
         count += 1
